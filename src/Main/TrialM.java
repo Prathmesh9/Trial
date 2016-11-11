@@ -14,18 +14,37 @@ public class TrialM {
 	public static void main(String[] args) {
 		Jedis jed= new Jedis("localhost");
 		System.out.println("Server runnig : "+jed.ping());
-		RecModel rm = new RecModel("20067658","1002349338","Ultimate Pony Smash World","Adventure",1,0);	
+		RecModel rm = new RecModel("20067658","1002349338","Ultimate Pony Smash World","Adventure","1","0");	
 		Map<String,String> user=new HashMap<String,String>();
 		user.put("visitor_id", rm.getmVisitorID());
 		user.put("content_id", rm.getmContentID());
 		user.put("visitor_id_view", String.valueOf(rm.getmView()));
 		user.put("visitor_id_download", String.valueOf(rm.getmDownload()));
-		jed.hmset("visitor_id:"+rm.getmVisitorID(), user);
+		String s=jed.hmset("visitor_id:"+rm.getmVisitorID(), user);
+		System.out.println("------"+s+"-----");
 		Map<String,String> user1=jed.hgetAll("visitor_id:"+rm.getmVisitorID());
 		System.out.println(user1.get("visitor_id"));
-		int a =Integer.parseInt("100947ff64a88cda");
-		System.out.println("Value = "+a);
-		System.out.println("a = "+String.valueOf(a));
+		FileReader fr;
+		String[] entryData;
+		int i;
+		try {
+			fr = new FileReader("/home/bridgeit/Prathmesh/PrathmeshC/contentTrenddata.csv");
+			BufferedReader br = new BufferedReader(fr);
+			String entry;
+			entry = br.readLine();
+			entryData = entry.split("\\,");
+
+			for (i = 0; i < entryData.length; i++) {
+				System.out.println(i + " " + entryData[i] + " ");
+			}
+			br.close();
+			}catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException ie) {
+				// TODO Auto-generated catch block
+				ie.printStackTrace();
+			}
 		jed.close();
 	}
 

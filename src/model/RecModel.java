@@ -3,17 +3,17 @@ package model;
 
 public class RecModel {
 
-	private String mContentID;
-	
 	private String mVisitorID;
+	
+	private String mContentID;
 	
 	private String mContentName;
 	
 	private String mCategoryName;
 	
-	private int mView;
+	private String mView;
 	
-	private int mDownload;
+	private String mDownload;
 
 	public String getmContentID() {
 		return mContentID;
@@ -47,19 +47,19 @@ public class RecModel {
 		this.mCategoryName = mCategoryName;
 	}
 
-	public int getmView() {
+	public String getmView() {
 		return mView;
 	}
 
-	public void setmView(int mView) {
+	public void setmView(String mView) {
 		this.mView = mView;
 	}
 
-	public int getmDownload() {
+	public String getmDownload() {
 		return mDownload;
 	}
 
-	public void setmDownload(int mDownload) {
+	public void setmDownload(String mDownload) {
 		this.mDownload = mDownload;
 	}
 	
@@ -67,9 +67,9 @@ public class RecModel {
 		
 	}
 	
-	public RecModel(String mContentID,String mVisitorID,String mContentName,String mCategoryName,int mView,int mDownload){
-		this.setmContentID(mContentID);
+	public RecModel(String mVisitorID,String mContentID,String mContentName,String mCategoryName,String mView,String mDownload){
 		this.setmVisitorID(mVisitorID);
+		this.setmContentID(mContentID);
 		this.setmCategoryName(mCategoryName);
 		this.setmContentName(mContentName);		
 		this.setmView(mView);
