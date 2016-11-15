@@ -29,6 +29,7 @@ public class RedisImpl {
 	static Utility u = new Utility();
 	final static Jedis redisConnect = new Jedis("localhost");
 	final int visitor = 0, content = 1;
+	final static String zero = "ZERO";
 
 	public void redisStartup() {
 		/*
@@ -107,42 +108,29 @@ public class RedisImpl {
 		String contentString = null;
 		System.out.println("Content_id : " + rm.getmContentID());
 		System.out.println();
-
-		List<String> record = redisConnect.hmget(CONTENT_ID_SET + ":" + rm.getmContentID().substring(0, 3),
-				rm.getmContentID());
-		if (record.size() > 1) {
-			contentString = u.createContent(rm.getmContentName(), rm.getmCategoryName());
-			redisConnect.hset(CONTENT_ID_SET + ":" + rm.getmContentID().substring(0, 3), rm.getmContentID(),
-					contentString);
+		List<String> record;
+		if (Integer.parseInt(rm.getmContentID()) > 100) {
+			record = redisConnect.hmget(CONTENT_ID_SET + ":" + rm.getmContentID().substring(0, 3), rm.getmContentID());
+		} else {
+			record = redisConnect.hmget(CONTENT_ID_SET + ":" + zero, rm.getmContentID());
 		}
-
-		/*
-		 * To create hash for visitor_id Map<String, String> user = new
-		 * HashMap<String, String>(); user.put("content_name",
-		 * String.valueOf(rm.getmContentName()));
-		 * user.put("content_categoryName",
-		 * String.valueOf(rm.getmCategoryName())); String res =
-		 * redisConnect.hmset(rm.getmContentID() + ":" + rm.getmCategoryName(),
-		 * user); String temp = "OK"; if (res.equals(temp)) return true; else {
-		 * System.out.println("Error Visitor"); return false; }
-		 */
+		if (record.get(0) == null) {
+			contentString = u.createContent(rm.getmContentName(), rm.getmCategoryName());
+			if (Integer.parseInt(rm.getmContentID()) > 100) {
+				redisConnect.hset(CONTENT_ID_SET + ":" + rm.getmContentID().substring(0, 3), rm.getmContentID(),
+						contentString);
+			} else {
+				redisConnect.hset(CONTENT_ID_SET + ":" + rm.getmContentID(), rm.getmContentID(), contentString);
+			}
+		}
 	}
 
 	public static void addVisitorView(RecModel rm) {
 		List<String> record = redisConnect.hmget(VISITOR_ID_VIEW_SET + ":" + rm.getmVisitorID().substring(0, 3),
 				rm.getmVisitorID());
-		
-		/*if (record.get(0)==null) {
-			System.out.println("Record is null : "+(record.get(0)==null));
-		}
-		
-		String s = record.get(0);
-		System.out.println("record string : " + s);
-		record=u.toList(record.toString());
-		System.out.println(record.toString() + " haskdgsga " + (record.isEmpty()));*/
-		
+
 		Set<String> recordSet = new HashSet<String>();
-		if (!(record.get(0)==null)) {
+		if (!(record.get(0) == null)) {
 			System.out.println(record);
 			if (Integer.parseInt(rm.getmView()) > 0) {
 				recordSet = u.toSet(record.get(0));
@@ -171,7 +159,7 @@ public class RedisImpl {
 		List<String> record = redisConnect.hmget(VISITOR_ID_DOWNLOAD_SET + ":" + rm.getmVisitorID().substring(0, 3),
 				rm.getmVisitorID());
 		Set<String> recordSet = new HashSet<String>();
-		if (!(record.get(0)==null)) {
+		if (!(record.get(0) == null)) {
 			if (Integer.parseInt(rm.getmDownload()) > 0) {
 				recordSet = u.toSet(record.get(0));
 				addDownload(recordSet, rm.getmVisitorID(), rm.getmContentID());
