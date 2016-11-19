@@ -1,6 +1,10 @@
-package main;
+package main.java;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 import com.google.gson.Gson;
@@ -27,5 +31,30 @@ public class Utility {
 		jObj.addProperty("ContentName", contentName);
 		jObj.addProperty("CategoryName", categoryName);
 		return jObj.toString();
+	}
+	
+	public Properties getProperties() {
+
+		Properties prop = new Properties();
+		try {
+
+			String propFileName = "/home/bridgeit/Prathmesh/PrathmeshC/Trial/src/main/resource/resource.properties";
+			// passing propFileName to the FileInputStream class object
+			FileInputStream fis;
+
+			fis = new FileInputStream(propFileName);
+			if (fis != null) {
+				// calling load method of Properties class
+				prop.load(fis);
+			} 
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return prop;
 	}
 }
